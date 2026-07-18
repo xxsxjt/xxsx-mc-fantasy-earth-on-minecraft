@@ -1,6 +1,12 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube",
   "textures": {
-    "all": "earth_online_magic:block/ritual_pedestal"
+    "particle": "earth_online_magic:block/ritual_pedestal",
+    "down": "minecraft:block/polished_blackstone",
+    "up": "earth_online_magic:block/ritual_pedestal",
+    "north": "earth_online_magic:block/ritual_pedestal_side",
+    "south": "earth_online_magic:block/ritual_pedestal_side",
+    "west": "earth_online_magic:block/ritual_pedestal_side",
+    "east": "earth_online_magic:block/ritual_pedestal_side"
   }
 }

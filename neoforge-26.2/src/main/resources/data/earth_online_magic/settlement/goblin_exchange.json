@@ -1,0 +1,11 @@
+{
+  "display_name": "settlement.earth_online_magic.goblin_exchange",
+  "culture": "goblin_trade",
+  "generation_status": "enabled",
+  "weight": 6,
+  "min_distance_chunks": 32,
+  "biomes": ["#minecraft:is_hill", "#minecraft:is_mountain"],
+  "buildings": ["exchange_hall", "salvage_yard", "measure_house", "tunnel_gate"],
+  "residents": ["goblin_broker", "goblin_appraiser", "goblin_guard", "surface_carrier"],
+  "outputs": ["earth_online_magic:rune_copper_plate", "earth_online_magic:aether_glass", "earth_online_magic:dormant_ritual_core"]
+}

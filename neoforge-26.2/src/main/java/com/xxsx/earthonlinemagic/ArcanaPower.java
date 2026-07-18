@@ -24,10 +24,13 @@ public final class ArcanaPower {
     public static final String ARCANE_BODY_WARD_LEVEL = "earth_online_arcana.arcane_body_ward_level";
     public static final String ARCANE_BREATH_WARD_LEVEL = "earth_online_arcana.arcane_breath_ward_level";
     public static final String MAGIC_FOCUS_COOLDOWN_UNTIL = "earth_online_arcana.magic_focus_cooldown_until";
+    public static final String ARCANE_FOCUS = "earth_online_arcana.arcane_focus";
+    public static final String MAGIC_LAST_ACTION = "earth_online_arcana.magic_last_action";
+    public static final String MAGIC_LAST_ACTION_TICK = "earth_online_arcana.magic_last_action_tick";
 
     private static final double DEFAULT_BASE_MANA = 20.0D;
     private static final double MAX_REASONABLE_MANA = 1_000_000.0D;
-    private static final long MAGIC_FOCUS_COOLDOWN_TICKS = 20L * 16L;
+    public static final int MAGIC_FOCUS_COOLDOWN_TICKS = 20 * 16;
 
     private ArcanaPower() {
     }
@@ -63,6 +66,16 @@ public final class ArcanaPower {
         data(player).putDouble(CURRENT_MANA, clamp(value, 0.0D, getMaxMana(player)));
     }
 
+    public static boolean trySpendMana(Player player, double amount) {
+        double cost = Math.max(0.0D, amount);
+        double current = getCurrentMana(player);
+        if (current + 0.0001D < cost) {
+            return false;
+        }
+        setCurrentMana(player, current - cost);
+        return true;
+    }
+
     public static int getMagicResearchLevel(Player player) {
         return Math.max(0, data(player).getIntOr(MAGIC_RESEARCH_LEVEL, 0));
     }
@@ -89,6 +102,29 @@ public final class ArcanaPower {
 
     public static double getBodyTemperingBonus(Player player) {
         return Math.max(0.0D, data(player).getDoubleOr(BODY_TEMPERING_BONUS, 0.0D));
+    }
+
+    public static ArcaneFocus getArcaneFocus(Player player) {
+        ArcaneFocus focus = ArcaneFocus.byId(data(player).getIntOr(ARCANE_FOCUS, 0));
+        return focus.isUnlocked(player) ? focus : ArcaneFocus.ATTUNEMENT;
+    }
+
+    public static boolean setArcaneFocus(Player player, ArcaneFocus focus) {
+        if (!focus.isUnlocked(player) || getArcaneFocus(player) == focus) {
+            return false;
+        }
+        data(player).putInt(ARCANE_FOCUS, focus.id());
+        return true;
+    }
+
+    public static int getArcaneFocusMask(Player player) {
+        int mask = 0;
+        for (ArcaneFocus focus : ArcaneFocus.values()) {
+            if (focus.isUnlocked(player)) {
+                mask |= 1 << focus.id();
+            }
+        }
+        return mask;
     }
 
     public static boolean learnArcaneInitiation(Player player) {
@@ -148,6 +184,12 @@ public final class ArcanaPower {
 
     public static void startMagicFocusCooldown(Player player, Level level) {
         data(player).putLong(MAGIC_FOCUS_COOLDOWN_UNTIL, level.getGameTime() + MAGIC_FOCUS_COOLDOWN_TICKS);
+    }
+
+    public static void recordAction(Player player, Level level, String action) {
+        CompoundTag tag = data(player);
+        tag.putString(MAGIC_LAST_ACTION, action);
+        tag.putLong(MAGIC_LAST_ACTION_TICK, level.getGameTime());
     }
 
     public static String format(double value) {

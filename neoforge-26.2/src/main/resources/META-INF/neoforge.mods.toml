@@ -4,14 +4,24 @@ license="All Rights Reserved"
 
 [[mods]]
 modId="earth_online_magic"
-version="0.1.1"
-displayName="Earth Online: Magic"
+version="0.7.0-alpha.1"
+displayName="Fantasy Earth on Minecraft / 魔幻地球 on Minecraft"
 description='''
 In-development beta for Minecraft 26.2 + NeoForge 26.2.0.7-beta.
-Earth Online: Magic is an independent fantasy branch for Earth Online-style worlds:
+Fantasy Earth on Minecraft is an independently playable fantasy world mod:
 magic is treated as a learnable natural phenomenon layered on top of Minecraft's item ecology.
-This first build focuses on load safety, starter materials, basic ritual/alchemy blocks,
-vanilla fallback recipes and bilingual guidance.
+This build implements the first playable magic loop: handbook screen, aether-aware
+alchemy/rune/ritual stations, JEI categories, consumable starter outputs,
+and optional Earth Human API-based fatigue/body-part recovery links.
+The server-synced arcane panel now opens from a configurable key anywhere.
+Free attunement is always available, while the optional focus mat adds full
+efficiency, continuous cycles, directional posture and stronger recovery.
+Arcane focuses retain distinct aether, ward and breath outcomes.
+The ecosystem slice now adds three contractable familiars, an independent crystal-armored
+spider and the existing Runic Watcher construct. Arcane dust stabilization, persistent
+familiar modes and owner support form a complete binding loop. Three resident professions
+trade through vanilla merchant containers, while witch hamlets, goblin exchanges and academy
+outposts generate through isolated features and deferred anchors without modifying vanilla mobs.
 '''
 authors="xxsx"
 

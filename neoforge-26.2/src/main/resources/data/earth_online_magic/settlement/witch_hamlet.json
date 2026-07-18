@@ -1,0 +1,11 @@
+{
+  "display_name": "settlement.earth_online_magic.witch_hamlet",
+  "culture": "hedge_magic",
+  "generation_status": "enabled",
+  "weight": 7,
+  "min_distance_chunks": 28,
+  "biomes": ["#minecraft:is_forest", "#minecraft:is_overworld"],
+  "buildings": ["herbal_cottage", "communal_cauldron", "charm_garden", "bog_storehouse"],
+  "residents": ["hedge_witch", "herbal_apprentice", "charm_trader"],
+  "outputs": ["earth_online_magic:arcane_dust", "earth_online_magic:rune_ink", "earth_online_magic:ritual_chalk"]
+}

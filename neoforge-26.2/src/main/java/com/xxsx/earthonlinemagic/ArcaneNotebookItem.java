@@ -20,6 +20,10 @@ public class ArcaneNotebookItem extends Item {
 
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        if (level.isClientSide()) {
+            openClientHandbook();
+            return InteractionResult.SUCCESS;
+        }
         if (!level.isClientSide()) {
             sendGuide(player);
             return InteractionResult.SUCCESS_SERVER;
@@ -53,5 +57,14 @@ public class ArcaneNotebookItem extends Item {
                 reading.value(),
                 reading.mainSource(),
                 ArcanaPower.format(reading.disturbance())).withStyle(ChatFormatting.DARK_PURPLE));
+    }
+
+    private static void openClientHandbook() {
+        try {
+            Class.forName("com.xxsx.earthonlinemagic.client.EarthOnlineMagicClient")
+                    .getMethod("openHandbook")
+                    .invoke(null);
+        } catch (ReflectiveOperationException ignored) {
+        }
     }
 }

@@ -1,0 +1,11 @@
+{
+  "display_name": "settlement.earth_online_magic.dwarven_delving",
+  "culture": "dwarven",
+  "generation_status": "catalog_only",
+  "weight": 3,
+  "min_distance_chunks": 52,
+  "biomes": ["#minecraft:is_mountain"],
+  "buildings": ["stone_gate", "rune_foundry", "deep_storehouse", "survey_gallery"],
+  "residents": ["dwarven_surveyor", "rune_smith", "delving_guard", "ore_broker"],
+  "outputs": ["earth_online_magic:rune_copper_plate", "earth_online_magic:crystallized_mana_salt", "earth_online_magic:aether_glass"]
+}

@@ -2,8 +2,11 @@ package com.xxsx.earthonlinemagic;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -49,10 +52,18 @@ public class ArcaneAdaptationNotesItem extends Item {
             }
 
             double restored = ArcanaPower.focusAmbientMagic(player, reading.value());
-            if (restored > 0.0D) {
-                AetherChunkField.disturb(level, player.blockPosition(), restored);
-                ArcanaPower.startMagicFocusCooldown(player, level);
+            AetherChunkField.disturb(level, player.blockPosition(), Math.max(1.0D, restored));
+            ArcanaPower.startMagicFocusCooldown(player, level);
+            ArcanaPower.recordAction(player, level, "combat_" + type.id);
+            if (type == Type.BODY_WARD) {
+                player.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 220, 0, true, false, true));
+                player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 220, 0, true, false, true));
+            } else {
+                player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100, 0, true, false, true));
             }
+            EarthHumanCompat.RecoveryReport report = player instanceof ServerPlayer serverPlayer
+                    ? recoverHuman(serverPlayer, restored)
+                    : new EarthHumanCompat.RecoveryReport(0.0D, 0.0D);
             AetherChunkField.Reading after = AetherChunkField.read(level, player.blockPosition());
             player.sendSystemMessage(Component.translatable("message.earth_online_magic." + type.id + (learned ? ".learned" : ".practiced"))
                     .withStyle(ChatFormatting.LIGHT_PURPLE));
@@ -65,8 +76,22 @@ public class ArcaneAdaptationNotesItem extends Item {
             player.sendSystemMessage(Component.translatable("message.earth_online_magic.arcane_notes.field",
                     after.mainSource(),
                     ArcanaPower.format(after.disturbance())).withStyle(ChatFormatting.DARK_PURPLE));
+            if (report.changed()) {
+                player.sendSystemMessage(Component.translatable("message.earth_online_magic.human_recovery",
+                        ArcanaPower.format(report.fatigueReduced()),
+                        ArcanaPower.format(report.bodyHealed())).withStyle(ChatFormatting.GREEN));
+            }
         }
         return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
+    }
+
+    private EarthHumanCompat.RecoveryReport recoverHuman(ServerPlayer player, double restoredMana) {
+        return switch (type) {
+            case BODY_WARD -> EarthHumanCompat.recoverWard(player, 2.4D + restoredMana * 0.04D,
+                    0.22D + restoredMana * 0.010D);
+            case BREATH_WARD -> EarthHumanCompat.recoverBreath(player, 1.8D + restoredMana * 0.03D,
+                    0.18D + restoredMana * 0.008D);
+        };
     }
 
     @Override

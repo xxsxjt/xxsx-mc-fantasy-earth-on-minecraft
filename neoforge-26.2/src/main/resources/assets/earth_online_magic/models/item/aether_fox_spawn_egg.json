@@ -1,0 +1,4 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": { "layer0": "earth_online_magic:item/aether_fox_spawn_egg" }
+}

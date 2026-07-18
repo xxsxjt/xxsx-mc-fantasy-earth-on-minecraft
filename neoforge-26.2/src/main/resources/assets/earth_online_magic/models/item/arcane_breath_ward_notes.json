@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "earth_online_magic:item/arcane_breath_ward_notes"
+  }
+}

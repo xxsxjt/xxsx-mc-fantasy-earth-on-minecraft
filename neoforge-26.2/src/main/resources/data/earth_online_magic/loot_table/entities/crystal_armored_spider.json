@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [{ "type": "minecraft:item", "name": "minecraft:amethyst_shard" }],
+      "functions": [{ "function": "minecraft:set_count", "count": { "type": "minecraft:uniform", "min": 1, "max": 3 } }]
+    },
+    {
+      "rolls": 1,
+      "entries": [{ "type": "minecraft:item", "name": "earth_online_magic:arcane_dust" }],
+      "conditions": [{ "condition": "minecraft:random_chance", "chance": 0.36 }]
+    }
+  ],
+  "random_sequence": "earth_online_magic:entities/crystal_armored_spider"
+}

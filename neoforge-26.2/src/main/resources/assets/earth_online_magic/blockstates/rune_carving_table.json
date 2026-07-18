@@ -1,7 +1,12 @@
 {
-  "variants": {
-    "": {
-      "model": "earth_online_magic:block/rune_carving_table"
-    }
-  }
+  "multipart": [
+    { "when": { "active": "false", "facing": "north" }, "apply": { "model": "earth_online_magic:block/rune_carving_table" } },
+    { "when": { "active": "false", "facing": "east" }, "apply": { "model": "earth_online_magic:block/rune_carving_table", "y": 90 } },
+    { "when": { "active": "false", "facing": "south" }, "apply": { "model": "earth_online_magic:block/rune_carving_table", "y": 180 } },
+    { "when": { "active": "false", "facing": "west" }, "apply": { "model": "earth_online_magic:block/rune_carving_table", "y": 270 } },
+    { "when": { "active": "true", "facing": "north" }, "apply": { "model": "earth_online_magic:block/rune_carving_table_active" } },
+    { "when": { "active": "true", "facing": "east" }, "apply": { "model": "earth_online_magic:block/rune_carving_table_active", "y": 90 } },
+    { "when": { "active": "true", "facing": "south" }, "apply": { "model": "earth_online_magic:block/rune_carving_table_active", "y": 180 } },
+    { "when": { "active": "true", "facing": "west" }, "apply": { "model": "earth_online_magic:block/rune_carving_table_active", "y": 270 } }
+  ]
 }

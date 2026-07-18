@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    { "rolls": 1, "entries": [{ "type": "minecraft:item", "name": "earth_online_magic:arcane_dust" }] },
+    {
+      "rolls": 1,
+      "entries": [{ "type": "minecraft:item", "name": "earth_online_magic:rune_copper_plate" }],
+      "conditions": [{ "condition": "minecraft:random_chance", "chance": 0.22 }]
+    }
+  ],
+  "random_sequence": "earth_online_magic:entities/rune_wolf"
+}

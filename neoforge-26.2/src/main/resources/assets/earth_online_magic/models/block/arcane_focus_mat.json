@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "top": "earth_online_magic:block/arcane_focus_mat_top",
+    "side": "earth_online_magic:block/arcane_focus_mat_side",
+    "stud": "minecraft:block/copper_block",
+    "particle": "earth_online_magic:block/arcane_focus_mat_side"
+  },
+  "elements": [
+    {
+      "from": [1, 0, 1],
+      "to": [15, 2, 15],
+      "faces": {
+        "down": { "texture": "#side" },
+        "up": { "texture": "#top" },
+        "north": { "texture": "#side" },
+        "south": { "texture": "#side" },
+        "west": { "texture": "#side" },
+        "east": { "texture": "#side" }
+      }
+    },
+    {
+      "from": [1, 2, 1],
+      "to": [3, 3, 3],
+      "faces": { "up": { "texture": "#stud" }, "north": { "texture": "#stud" }, "west": { "texture": "#stud" } }
+    },
+    {
+      "from": [13, 2, 1],
+      "to": [15, 3, 3],
+      "faces": { "up": { "texture": "#stud" }, "north": { "texture": "#stud" }, "east": { "texture": "#stud" } }
+    },
+    {
+      "from": [1, 2, 13],
+      "to": [3, 3, 15],
+      "faces": { "up": { "texture": "#stud" }, "south": { "texture": "#stud" }, "west": { "texture": "#stud" } }
+    },
+    {
+      "from": [13, 2, 13],
+      "to": [15, 3, 15],
+      "faces": { "up": { "texture": "#stud" }, "south": { "texture": "#stud" }, "east": { "texture": "#stud" } }
+    }
+  ]
+}

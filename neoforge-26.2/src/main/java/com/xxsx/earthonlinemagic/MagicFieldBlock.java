@@ -28,14 +28,19 @@ public class MagicFieldBlock extends Block {
     }
 
     private InteractionResult describe(Level level, BlockPos pos, Player player) {
-        if (!level.isClientSide()) {
-            AetherChunkField.Reading reading = AetherChunkField.read(level, pos);
-            player.sendSystemMessage(Component.translatable("message.earth_online_magic.block.field",
-                    AetherChunkField.gradeName(reading.value()),
-                    reading.value(),
-                    reading.mainSource(),
-                    ArcanaPower.format(reading.disturbance())).withStyle(ChatFormatting.LIGHT_PURPLE));
+        if (level.isClientSide()) {
+            return InteractionResult.SUCCESS;
         }
-        return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;
+        var ritualCenter = MagicStructures.findFormalRitualCenter(level, pos);
+        if (ritualCenter.isPresent()) {
+            return MagicMachineBlock.openMachineAt(level, ritualCenter.get(), player);
+        }
+        AetherChunkField.Reading reading = AetherChunkField.read(level, pos);
+        player.sendSystemMessage(Component.translatable("message.earth_online_magic.block.field",
+                AetherChunkField.gradeName(reading.value()),
+                reading.value(),
+                reading.mainSource(),
+                ArcanaPower.format(reading.disturbance())).withStyle(ChatFormatting.LIGHT_PURPLE));
+        return InteractionResult.SUCCESS_SERVER;
     }
 }

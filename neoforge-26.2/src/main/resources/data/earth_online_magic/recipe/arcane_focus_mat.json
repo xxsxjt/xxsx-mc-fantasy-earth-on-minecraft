@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " W ",
+    "RPR",
+    " C "
+  ],
+  "key": {
+    "W": "#minecraft:wool",
+    "R": "earth_online_magic:rune_ink",
+    "P": "#minecraft:planks",
+    "C": "earth_online_magic:ritual_chalk"
+  },
+  "result": {
+    "id": "earth_online_magic:arcane_focus_mat"
+  }
+}

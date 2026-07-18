@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "earth_online_magic:block/rune_carving_table_top_active",
+    "down": "minecraft:block/stone",
+    "up": "earth_online_magic:block/rune_carving_table_top_active",
+    "north": "earth_online_magic:block/rune_carving_table_front",
+    "south": "earth_online_magic:block/rune_carving_table_side",
+    "west": "earth_online_magic:block/rune_carving_table_side",
+    "east": "earth_online_magic:block/rune_carving_table_side"
+  }
+}

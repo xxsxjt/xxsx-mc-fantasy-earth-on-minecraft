@@ -1,0 +1,11 @@
+{
+  "display_name": "settlement.earth_online_magic.elven_grove",
+  "culture": "elven",
+  "generation_status": "catalog_only",
+  "weight": 3,
+  "min_distance_chunks": 48,
+  "biomes": ["#minecraft:is_forest"],
+  "buildings": ["living_arch", "aether_garden", "song_hall", "moon_observatory"],
+  "residents": ["grove_warden", "aether_gardener", "lore_singer", "envoy"],
+  "outputs": ["earth_online_magic:aether_crystal", "earth_online_magic:aether_glass", "earth_online_magic:crystallized_mana_salt"]
+}
