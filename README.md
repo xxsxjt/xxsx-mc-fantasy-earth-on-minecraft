@@ -10,7 +10,7 @@ Initial target:
 - Loader: NeoForge 26.2.0.7-beta
 - Java: 25
 - Current mod id: `earth_online_magic`
-- Current version: `0.7.0-alpha.1`
+- Current version: `0.7.0-alpha.4`
 - Current status: in-development playable beta
 
 `0.4.3` begins the large-mod phase with a configurable arcane-panel key (`M` by default).
@@ -30,6 +30,19 @@ Earth on Minecraft material tags directly in arcane facilities, and reports live
 integration status in the handbook. Earth Human recovery now uses its public API instead of
 writing private NBT or assuming fixed body-part capacities.
 
+`0.7.0-alpha.3` separates guidance, research, training and active spells. The Field Arcane
+Notebook remains a permanent handbook and is no longer consumed by initiation. Notes only
+unlock circuits; the panel and focus mat advance independent level-1-to-10 experience tracks.
+The configurable `B` key casts the selected circuit's mana-costed spell. Familiar, watcher and
+crystal-spider render states now use real attack progress, sitting posture and distinct motion.
+
+`0.7.0-alpha.4` makes progression rewards operational instead of descriptive. Endurance
+reduces real food and saturation loss, body wards reduce entity-sourced combat damage and
+fall impact, and breathing research lowers underwater air consumption by a persistent
+multiplier. Xuanhuan Earth owns shared-body-effect consumption when both mods are installed,
+preventing duplicate application. The handbook now shows live unlock/XP/next-step status,
+while attunement, recovery and spell casts drive short-lived synchronized player poses.
+
 Design documents:
 
 - [Initial Plan](docs/initial-plan.md)
@@ -44,7 +57,7 @@ Implemented in `neoforge-26.2/`:
 
 - Creative tab: `Fantasy Earth on Minecraft` / `魔幻地球 on Minecraft`
 - Starter handbook: `field_arcane_notebook`, craftable from one dirt, any planks, or stone crafting materials
-- Arcane initiation notes: `arcane_initiation_notes`, crafted from the handbook plus arcane dust; first use unlocks magic-route contribution to the shared mana value
+- Arcane initiation notes: `arcane_initiation_notes`, crafted from a normal book, arcane dust and amethyst; first use unlocks magic-route contribution without consuming the handbook
 - Basic materials: arcane dust, rune ink, ritual chalk, crystallized mana salt, aether glass, rune copper plate, aether crystal, dormant ritual core
 - Basic blocks: alchemy table, rune carving table, ritual pedestal, aether crystal cluster
 - Bilingual language files: `zh_cn` and `en_us`
@@ -70,7 +83,7 @@ Texture note: facilities use per-face exterior textures, distinct active states 
 
 Mana note: this mod shares the versioned `earth_online_arcana.*` player-data contract with `earth_online_xuanhuan`. Magic-route and qi-route bonuses add together when both mods are present, but each mod writes only its own contribution and remains fully playable alone. Aether-field recovery is intentionally separate from xuanhuan qi: magic reads crystal, ritual, rune and alchemy structures, while xuanhuan reads veins, springs, spirit soil and arrays.
 
-Build artifact: `fantasy-earth-on-minecraft-neoforge-26.2-0.7.0-alpha.1.jar`.
+Build artifact: `fantasy-earth-on-minecraft-neoforge-26.2-0.7.0-alpha.4.jar`.
 
 Build:
 

@@ -35,6 +35,8 @@ public final class FamiliarRenderer<T extends ContractableFamiliarEntity,
         state.stability = entity.getStability() / (float) ContractableFamiliarEntity.MAX_STABILITY;
         state.familiarMode = entity.getFamiliarMode().id();
         state.aggressive = entity.getTarget() != null;
+        state.attackProgress = entity.getAttackAnim(partialTick);
+        state.sitting = entity.isInSittingPose();
     }
 
     @Override

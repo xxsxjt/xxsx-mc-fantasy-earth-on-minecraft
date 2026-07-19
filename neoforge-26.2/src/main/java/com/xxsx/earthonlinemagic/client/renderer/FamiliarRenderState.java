@@ -6,4 +6,6 @@ public final class FamiliarRenderState extends LivingEntityRenderState {
     public float stability;
     public int familiarMode;
     public boolean aggressive;
+    public float attackProgress;
+    public boolean sitting;
 }

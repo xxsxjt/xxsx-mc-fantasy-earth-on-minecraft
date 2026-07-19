@@ -97,9 +97,13 @@ public final class RunicWatcherModel extends EntityModel<RunicWatcherRenderState
         this.rightLeg.xRot = Mth.cos(walk * 0.6662F) * 1.05F * speed;
         this.leftLeg.xRot = Mth.cos(walk * 0.6662F + Mth.PI) * 1.05F * speed;
 
-        float combatLift = state.aggressive ? -0.65F : 0.0F;
+        float attack = Mth.sin(state.attackProgress * Mth.PI);
+        float combatLift = state.aggressive ? -0.48F : 0.0F;
         this.rightArm.xRot = Mth.cos(walk * 0.6662F + Mth.PI) * 0.7F * speed + combatLift;
         this.leftArm.xRot = Mth.cos(walk * 0.6662F) * 0.7F * speed + combatLift;
+        this.rightArm.xRot -= attack * 1.35F;
+        this.leftArm.xRot -= attack * 1.05F;
+        this.torso.xRot = attack * 0.16F;
         this.rightArm.zRot = -0.08F - (state.aggressive ? 0.22F : 0.0F);
         this.leftArm.zRot = 0.08F + (state.aggressive ? 0.22F : 0.0F);
 

@@ -10,6 +10,7 @@ public record ArcaneActionPayload(int focusId) implements CustomPacketPayload {
     public static final int OPEN_PANEL = -2;
     public static final int PRACTICE = -3;
     public static final int REFRESH_STATUS = -4;
+    public static final int ACTIVATE_SKILL = -5;
     public static final Type<ArcaneActionPayload> TYPE =
             new Type<>(EarthOnlineMagic.id("arcane_action"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ArcaneActionPayload> CODEC = StreamCodec.composite(

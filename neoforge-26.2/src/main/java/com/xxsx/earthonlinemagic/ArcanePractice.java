@@ -11,8 +11,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 
-import java.util.Locale;
-
 public final class ArcanePractice {
     public enum Support {
         FREE(0, 0.72D, 0.72D, "free"),
@@ -51,11 +49,18 @@ public final class ArcanePractice {
     }
 
     public static boolean perform(ServerLevel level, BlockPos pos, ServerPlayer player,
-                                  Support support, boolean quietCooldown) {
-        boolean learned = ArcanaPower.learnArcaneInitiation(player);
+                                  Support support, boolean quietOutput) {
+        if (ArcanaPower.getMagicResearchLevel(player) <= 0) {
+            if (!quietOutput) {
+                player.sendSystemMessage(Component.translatable(
+                        "message.earth_online_magic.practice.requires_initiation")
+                        .withStyle(ChatFormatting.RED));
+            }
+            return false;
+        }
         long cooldown = ArcanaPower.getMagicFocusCooldownTicks(player, level);
-        if (!learned && cooldown > 0L) {
-            if (!quietCooldown && cooldown > 20L) {
+        if (cooldown > 0L) {
+            if (!quietOutput && cooldown > 20L) {
                 player.sendSystemMessage(Component.translatable("message.earth_online_magic.arcane_notes.cooldown",
                         (cooldown + 19L) / 20L).withStyle(ChatFormatting.YELLOW));
             }
@@ -73,10 +78,11 @@ public final class ArcanePractice {
         int usableAether = Math.max(1,
                 (int) Math.round(focusedAether * focusScale * support.efficiency()));
         double restored = ArcanaPower.focusAmbientMagic(player, usableAether);
+        int gainedXp = Math.max(2, (int) Math.round((3.0D + focusedAether * 0.12D) * support.efficiency()));
+        ArcanaPower.ProgressResult progress = ArcanaPower.addArcaneExperience(player, focus, gainedXp);
         AetherChunkField.disturb(level, pos, Math.max(1.0D, restored));
         ArcanaPower.startMagicFocusCooldown(player, level);
-        ArcanaPower.recordAction(player, level,
-                "attunement_" + support.translationSuffix + "_" + focus.name().toLowerCase(Locale.ROOT));
+        ArcaneNetwork.broadcastVisual(player, ArcaneVisualAction.ATTUNEMENT);
 
         double recoveryScale = support.recoveryScale();
         EarthHumanCompat.RecoveryReport report;
@@ -109,17 +115,27 @@ public final class ArcanePractice {
             }
         }
 
-        String state = learned ? "learned" : "used";
-        player.sendSystemMessage(Component.translatable(
-                "message.earth_online_magic.practice." + state + "." + support.translationSuffix)
-                .withStyle(ChatFormatting.LIGHT_PURPLE));
-        player.sendSystemMessage(Component.translatable("message.earth_online_magic.practice.result",
-                AetherChunkField.gradeName(reading.value()),
-                reading.value(),
-                ArcanaPower.format(restored),
-                ArcanaPower.format(report.fatigueReduced()),
-                ArcanaPower.format(report.bodyHealed()),
-                Math.round(support.efficiency() * 100.0D)).withStyle(ChatFormatting.AQUA));
+        if (!quietOutput) {
+            player.sendSystemMessage(Component.translatable(
+                    "message.earth_online_magic.practice.used." + support.translationSuffix)
+                    .withStyle(ChatFormatting.LIGHT_PURPLE));
+            player.sendSystemMessage(Component.translatable("message.earth_online_magic.practice.result",
+                    AetherChunkField.gradeName(reading.value()),
+                    reading.value(),
+                    ArcanaPower.format(restored),
+                    progress.gainedXp(),
+                    progress.level(),
+                    progress.atCap() ? "MAX" : progress.xp() + "/" + progress.xpNeeded(),
+                    ArcanaPower.format(report.fatigueReduced()),
+                    ArcanaPower.format(report.bodyHealed()),
+                    Math.round(support.efficiency() * 100.0D)).withStyle(ChatFormatting.AQUA));
+        }
+        if (progress.leveledUp()) {
+            player.sendSystemMessage(Component.translatable(
+                    "message.earth_online_magic.practice.level_up",
+                    Component.translatable(focus.titleKey()), progress.level())
+                    .withStyle(ChatFormatting.GOLD));
+        }
         emitPractice(level, pos, focus, support);
         return true;
     }

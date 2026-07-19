@@ -29,6 +29,7 @@ public class ArcaneAttunementScreen extends Screen {
 
     private final Map<ArcaneFocus, Button> focusButtons = new EnumMap<>(ArcaneFocus.class);
     private Button primaryActionButton;
+    private Button spellButton;
     private int refreshTicks;
 
     public ArcaneAttunementScreen() {
@@ -41,16 +42,21 @@ public class ArcaneAttunementScreen extends Screen {
         int left = panelLeft();
         int top = panelTop();
         int buttonWidth = navigationWidth() - 20;
-        int y = top + 43;
+        int y = top + 37;
         for (ArcaneFocus focus : ArcaneFocus.values()) {
             Button button = addRenderableWidget(Button.builder(Component.translatable(focus.titleKey()),
                             ignored -> EarthOnlineMagicClient.requestArcaneFocus(focus))
-                    .bounds(left + 10, y, buttonWidth, 20)
+                    .bounds(left + 10, y, buttonWidth, 18)
                     .build());
             button.setTooltip(Tooltip.create(Component.translatable(focus.descriptionKey())));
             focusButtons.put(focus, button);
-            y += 24;
+            y += 20;
         }
+        spellButton = addRenderableWidget(Button.builder(
+                        Component.translatable("screen.earth_online_magic.attunement.skill"),
+                        ignored -> EarthOnlineMagicClient.requestActivateArcaneSkill())
+                .bounds(left + 10, top + panelHeight() - 50, buttonWidth, 18)
+                .build());
         primaryActionButton = addRenderableWidget(Button.builder(
                         Component.translatable("screen.earth_online_magic.attunement.practice"),
                         ignored -> performPrimaryAction())
@@ -110,20 +116,32 @@ public class ArcaneAttunementScreen extends Screen {
         int circuitWidth = Math.min(68, Math.max(54, contentW / 3));
         int meterX = contentX + circuitWidth + 6;
         int meterWidth = Math.max(78, contentW - circuitWidth - 6);
-        int y = top + 54;
+        int y = top + 52;
         drawCompactBar(g, meterX, y, meterWidth,
                 Component.translatable("screen.earth_online_magic.attunement.mana"),
                 status.maxMana() <= 0.0D ? 0.0D : status.currentMana() / status.maxMana(),
                 Math.round(status.currentMana()) + " / " + Math.round(status.maxMana()), ACCENT);
-        y += 20;
+        y += 17;
         drawCompactBar(g, meterX, y, meterWidth,
                 Component.translatable("screen.earth_online_magic.attunement.field"),
                 status.fieldValue() / 100.0D, status.fieldValue() + " / 100", fieldColor(status.fieldValue()));
-        y += 20;
+        y += 17;
         drawCompactBar(g, meterX, y, meterWidth,
                 Component.translatable("screen.earth_online_magic.attunement.disturbance"),
                 status.disturbance() / 45.0D, Math.round(status.disturbance()) + " / 45", 0xFFD575B6);
-        drawCircuit(g, contentX, top + 54, circuitWidth, 58, status);
+        y += 17;
+        boolean focusUnlocked = status.isUnlocked(focus);
+        drawCompactBar(g, meterX, y, meterWidth,
+                Component.translatable("screen.earth_online_magic.attunement.growth"),
+                !focusUnlocked ? 0.0D : status.focusXpNeeded() <= 0
+                        ? 1.0D : status.focusXp() / (double) status.focusXpNeeded(),
+                !focusUnlocked
+                        ? Component.translatable("screen.earth_online_magic.attunement.growth.locked").getString()
+                        : status.focusXpNeeded() <= 0
+                        ? "Lv." + status.focusLevel() + " · MAX"
+                        : "Lv." + status.focusLevel() + " · " + status.focusXp() + "/" + status.focusXpNeeded(),
+                0xFF75C7E8);
+        drawCircuit(g, contentX, top + 52, circuitWidth, 73, status);
 
         int stageY = top + h - 39;
         drawStageTrack(g, contentX, stageY, contentW, status);
@@ -184,10 +202,20 @@ public class ArcaneAttunementScreen extends Screen {
             primaryActionButton.setMessage(Component.translatable(seated
                     ? "screen.earth_online_magic.attunement.leave_focus_mat"
                     : "screen.earth_online_magic.attunement.practice"));
-            primaryActionButton.active = seated || status.remainingTicks() <= 0;
+            primaryActionButton.active = seated
+                    || status.isUnlocked(ArcaneFocus.ATTUNEMENT) && status.remainingTicks() <= 0;
             primaryActionButton.setTooltip(Tooltip.create(Component.translatable(seated
                     ? "screen.earth_online_magic.attunement.leave_focus_mat.tooltip"
                     : "screen.earth_online_magic.attunement.practice.tooltip")));
+        }
+        if (spellButton != null) {
+            int seconds = Math.max(0, (status.skillRemainingTicks() + 19) / 20);
+            spellButton.setMessage(seconds > 0
+                    ? Component.translatable("screen.earth_online_magic.attunement.skill.cooldown", seconds)
+                    : Component.translatable("screen.earth_online_magic.attunement.skill"));
+            spellButton.active = status.isUnlocked(selected) && status.skillRemainingTicks() <= 0;
+            spellButton.setTooltip(Tooltip.create(Component.translatable(
+                    "screen.earth_online_magic.attunement.skill." + selected.path() + ".tooltip")));
         }
     }
 

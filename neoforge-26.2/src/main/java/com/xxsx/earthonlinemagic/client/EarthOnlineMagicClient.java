@@ -14,6 +14,7 @@ import com.xxsx.earthonlinemagic.EarthOnlineMagic;
 import com.xxsx.earthonlinemagic.ArcaneActionPayload;
 import com.xxsx.earthonlinemagic.ArcaneFocus;
 import com.xxsx.earthonlinemagic.ArcaneStatusPayload;
+import com.xxsx.earthonlinemagic.ArcaneVisualPayload;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -37,6 +38,11 @@ public final class EarthOnlineMagicClient {
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_M,
             CATEGORY);
+    private static final KeyMapping ACTIVATE_ARCANE_SKILL = new KeyMapping(
+            "key.earth_online_magic.activate_arcane_skill",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_B,
+            CATEGORY);
     private static ArcaneStatusPayload arcaneStatus = ArcaneStatusPayload.empty();
     private EarthOnlineMagicClient() {
     }
@@ -49,6 +55,7 @@ public final class EarthOnlineMagicClient {
         modBus.addListener(EarthOnlineMagicClient::registerPayloadHandlers);
         modBus.addListener(EarthOnlineMagicClient::registerKeyMappings);
         NeoForge.EVENT_BUS.addListener(EarthOnlineMagicClient::clientTick);
+        NeoForge.EVENT_BUS.addListener(ArcanePlayerAnimations::renderPlayer);
     }
 
     private static void registerScreens(RegisterMenuScreensEvent event) {
@@ -86,18 +93,27 @@ public final class EarthOnlineMagicClient {
 
     private static void registerPayloadHandlers(RegisterClientPayloadHandlersEvent event) {
         event.register(ArcaneStatusPayload.TYPE, EarthOnlineMagicClient::handleArcaneStatus);
+        event.register(ArcaneVisualPayload.TYPE, EarthOnlineMagicClient::handleArcaneVisual);
     }
 
     private static void registerKeyMappings(RegisterKeyMappingsEvent event) {
         event.registerCategory(CATEGORY);
         event.register(OPEN_ATTUNEMENT);
+        event.register(ACTIVATE_ARCANE_SKILL);
     }
 
     private static void clientTick(ClientTickEvent.Post event) {
+        ArcanePlayerAnimations.tick();
         while (OPEN_ATTUNEMENT.consumeClick()) {
             Minecraft minecraft = Minecraft.getInstance();
             if (minecraft.player != null && minecraft.getConnection() != null) {
                 requestOpenAttunement();
+            }
+        }
+        while (ACTIVATE_ARCANE_SKILL.consumeClick()) {
+            Minecraft minecraft = Minecraft.getInstance();
+            if (minecraft.player != null && minecraft.getConnection() != null && minecraft.gui.screen() == null) {
+                requestActivateArcaneSkill();
             }
         }
     }
@@ -109,6 +125,10 @@ public final class EarthOnlineMagicClient {
                 Minecraft.getInstance().gui.setScreen(new ArcaneAttunementScreen());
             }
         });
+    }
+
+    private static void handleArcaneVisual(ArcaneVisualPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> ArcanePlayerAnimations.start(payload));
     }
 
     public static ArcaneStatusPayload arcaneStatus() {
@@ -131,11 +151,18 @@ public final class EarthOnlineMagicClient {
         ClientPacketDistributor.sendToServer(new ArcaneActionPayload(ArcaneActionPayload.PRACTICE));
     }
 
+    public static void requestActivateArcaneSkill() {
+        ClientPacketDistributor.sendToServer(new ArcaneActionPayload(ArcaneActionPayload.ACTIVATE_SKILL));
+    }
+
     public static void requestAttunementRefresh() {
         ClientPacketDistributor.sendToServer(new ArcaneActionPayload(ArcaneActionPayload.REFRESH_STATUS));
     }
 
     public static void openHandbook() {
+        if (Minecraft.getInstance().getConnection() != null) {
+            requestAttunementRefresh();
+        }
         Minecraft.getInstance().gui.setScreen(new MagicHandbookScreen());
     }
 }

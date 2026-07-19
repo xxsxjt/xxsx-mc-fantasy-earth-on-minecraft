@@ -23,9 +23,11 @@ public final class AetherFoxModel extends EntityModel<FamiliarRenderState> {
     private final ModelPart[] legs;
     private final ModelPart leftTail;
     private final ModelPart rightTail;
+    private final ModelPart leftTailMid;
+    private final ModelPart rightTailMid;
 
     public AetherFoxModel(ModelPart root) {
-        super(root, RenderTypes::entityTranslucent);
+        super(root, RenderTypes::entityCutout);
         head = root.getChild("head");
         leftEarFin = head.getChild("left_ear_fin");
         rightEarFin = head.getChild("right_ear_fin");
@@ -34,6 +36,8 @@ public final class AetherFoxModel extends EntityModel<FamiliarRenderState> {
                 root.getChild("back_right_leg"), root.getChild("back_left_leg")};
         leftTail = root.getChild("left_tail");
         rightTail = root.getChild("right_tail");
+        leftTailMid = leftTail.getChild("mid");
+        rightTailMid = rightTail.getChild("mid");
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -57,13 +61,26 @@ public final class AetherFoxModel extends EntityModel<FamiliarRenderState> {
         leg(root, "front_left_leg", 12, 48, 2.5F, -4.0F);
         leg(root, "back_right_leg", 24, 48, -2.5F, 4.0F);
         leg(root, "back_left_leg", 36, 48, 2.5F, 4.0F);
-        root.addOrReplaceChild("left_tail", CubeListBuilder.create().texOffs(0, 62)
-                        .addBox(-2.2F, -2.2F, 0.0F, 4.4F, 4.4F, 15.0F),
+        PartDefinition leftTail = root.addOrReplaceChild("left_tail", CubeListBuilder.create().texOffs(0, 64)
+                        .addBox(-2.0F, -2.0F, 0.0F, 4.0F, 4.0F, 7.0F),
                 PartPose.offsetAndRotation(2.0F, 14.0F, 5.0F, 0.35F, 0.22F, 0.0F));
-        root.addOrReplaceChild("right_tail", CubeListBuilder.create().texOffs(40, 62)
-                        .addBox(-2.2F, -2.2F, 0.0F, 4.4F, 4.4F, 15.0F),
+        PartDefinition leftTailMid = leftTail.addOrReplaceChild("mid", CubeListBuilder.create().texOffs(48, 64)
+                        .addBox(-2.5F, -2.5F, 0.0F, 5.0F, 5.0F, 7.0F),
+                PartPose.offsetAndRotation(0.0F, 0.0F, 6.3F, 0.12F, 0.12F, 0.0F));
+        leftTailMid.addOrReplaceChild("tip", CubeListBuilder.create().texOffs(0, 84)
+                        .addBox(-3.0F, -3.0F, 0.0F, 6.0F, 6.0F, 6.0F),
+                PartPose.offsetAndRotation(0.0F, 0.0F, 6.3F, 0.10F, 0.10F, 0.0F));
+
+        PartDefinition rightTail = root.addOrReplaceChild("right_tail", CubeListBuilder.create().texOffs(24, 64)
+                        .addBox(-2.0F, -2.0F, 0.0F, 4.0F, 4.0F, 7.0F),
                 PartPose.offsetAndRotation(-2.0F, 14.0F, 5.0F, 0.35F, -0.22F, 0.0F));
-        return LayerDefinition.create(mesh, 96, 96);
+        PartDefinition rightTailMid = rightTail.addOrReplaceChild("mid", CubeListBuilder.create().texOffs(74, 64)
+                        .addBox(-2.5F, -2.5F, 0.0F, 5.0F, 5.0F, 7.0F),
+                PartPose.offsetAndRotation(0.0F, 0.0F, 6.3F, 0.12F, -0.12F, 0.0F));
+        rightTailMid.addOrReplaceChild("tip", CubeListBuilder.create().texOffs(26, 84)
+                        .addBox(-3.0F, -3.0F, 0.0F, 6.0F, 6.0F, 6.0F),
+                PartPose.offsetAndRotation(0.0F, 0.0F, 6.3F, 0.10F, -0.10F, 0.0F));
+        return LayerDefinition.create(mesh, 128, 128);
     }
 
     private static void leg(PartDefinition root, String name, int u, int v, float x, float z) {
@@ -86,8 +103,24 @@ public final class AetherFoxModel extends EntityModel<FamiliarRenderState> {
         float tail = Mth.sin(state.ageInTicks * 0.10F) * (0.25F + state.stability * 0.16F);
         leftTail.yRot = 0.22F + tail;
         rightTail.yRot = -0.22F - tail;
+        leftTailMid.yRot = 0.12F + tail * 0.45F;
+        rightTailMid.yRot = -0.12F - tail * 0.45F;
         leftEarFin.zScale = 1.0F + Mth.sin(state.ageInTicks * 0.18F) * 0.06F;
         rightEarFin.zScale = leftEarFin.zScale;
         body.y = 15.0F + Mth.sin(state.ageInTicks * 0.08F) * 0.05F;
+        float attack = Mth.sin(state.attackProgress * Mth.PI);
+        head.xRot -= attack * 0.52F;
+        body.xRot = -attack * 0.10F;
+        legs[0].xRot -= attack * 0.38F;
+        legs[1].xRot -= attack * 0.38F;
+        if (state.sitting) {
+            body.xRot = 0.18F;
+            legs[0].xRot = -0.10F;
+            legs[1].xRot = -0.10F;
+            legs[2].xRot = -1.08F;
+            legs[3].xRot = -1.08F;
+            leftTail.xRot = 0.92F;
+            rightTail.xRot = 0.92F;
+        }
     }
 }

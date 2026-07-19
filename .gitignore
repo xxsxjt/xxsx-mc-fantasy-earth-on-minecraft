@@ -3,6 +3,8 @@
 build/
 out/
 *.class
+__pycache__/
+*.py[cod]
 
 # IDE
 .idea/

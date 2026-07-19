@@ -1,5 +1,7 @@
 package com.xxsx.earthonlinemagic.client;
 
+import com.xxsx.earthonlinemagic.ArcaneFocus;
+import com.xxsx.earthonlinemagic.ArcaneStatusPayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
@@ -193,7 +195,12 @@ public class MagicHandbookScreen extends Screen {
 
     private List<Line> wrap(Page current) {
         List<Line> result = new ArrayList<>();
-        for (Entry entry : current.entries) {
+        List<Entry> entries = new ArrayList<>();
+        if (page == 0) {
+            entries.addAll(liveStatusEntries());
+        }
+        entries.addAll(current.entries);
+        for (Entry entry : entries) {
             if (entry.text.isBlank()) {
                 result.add(new Line(FormattedCharSequence.EMPTY, 0, INK, true));
                 continue;
@@ -203,6 +210,34 @@ public class MagicHandbookScreen extends Screen {
             }
         }
         return result;
+    }
+
+    private List<Entry> liveStatusEntries() {
+        ArcaneStatusPayload status = EarthOnlineMagicClient.arcaneStatus();
+        if (!status.isUnlocked(ArcaneFocus.ATTUNEMENT)) {
+            return List.of(
+                    new Entry(Component.translatable(
+                            "screen.earth_online_magic.handbook.status.locked").getString(), 10, PURPLE),
+                    new Entry(Component.translatable(
+                            "screen.earth_online_magic.handbook.status.next.learn").getString(), 10, GOLD),
+                    new Entry("", 0, INK));
+        }
+
+        ArcaneFocus focus = ArcaneFocus.byId(status.focusId());
+        String xp = status.focusXpNeeded() <= 0
+                ? "MAX"
+                : status.focusXp() + "/" + status.focusXpNeeded();
+        int unlocked = Integer.bitCount(status.unlockedMask());
+        String nextKey = unlocked < ArcaneFocus.values().length
+                ? "screen.earth_online_magic.handbook.status.next.unlock"
+                : "screen.earth_online_magic.handbook.status.next.train";
+        return List.of(
+                new Entry(Component.translatable(
+                        "screen.earth_online_magic.handbook.status.current",
+                        Component.translatable(focus.titleKey()), status.focusLevel(), xp, unlocked).getString(),
+                        10, BLUE),
+                new Entry(Component.translatable(nextKey).getString(), 10, GOLD),
+                new Entry("", 0, INK));
     }
 
     private int bookWidth() {
@@ -246,11 +281,13 @@ public class MagicHandbookScreen extends Screen {
                             "Full ritual circle: pedestal center, crystal corners and ritual marks on the four sides. It lowers aether requirement and works faster."),
                     page("Use", "3. What can I use?", GOLD,
                             "Crystallized mana salt and aether crystals are consumable mana recovery items.",
-                            "Initiation and adaptation notes train the magic route. They stack with the qi route by adding to shared mana."),
+                            "Notes unlock research routes. Repeated attunement happens in the panel or on a focus mat and grants route experience.",
+                            "Each route has levels 1-10. Level rewards stack with the qi route by adding to shared mana and route-specific adaptation."),
                     page("Actions", "4. Actions and Earth Human", PURPLE,
                             "Press the configurable arcane-panel key (M by default) to attune anywhere. Free attunement runs at 72% efficiency and disturbs local aether.",
+                            "Use the panel button or configurable B key to cast the selected circuit's active spell. It spends mana and has its own cooldown.",
                             "The Arcane Focus Mat is optional: sitting provides full efficiency, extra aether gathering, continuous cycles and stronger Earth Human recovery.",
-                            "Combat actions such as arcane body ward grant short protection while lightly supporting torso and limbs."),
+                            "Aether Pulse, Arcane Ward and Breathing Circuit are separate active effects; research notes no longer cast them for free."),
                     page("Links", "5. Optional integrations", PURPLE,
                             earthLoaded
                                     ? "Earth on Minecraft connected: geology catalysts, mana conductors and crystal substrates work directly in arcane facilities."
@@ -273,14 +310,16 @@ public class MagicHandbookScreen extends Screen {
                         "仪式基座：休眠核心 + 魔盐 -> 2 聚魔水晶；以太玻璃 + 2 魔盐 -> 休眠核心；晶体基底 + 魔盐 -> 2 聚魔水晶。",
                         "正式仪式圈：中心仪式基座，四角聚魔水晶簇或紫水晶簇，四边书架/荧石/红石块/炼金台/符文刻台。成型后门槛降低并加速。"),
                 page("法力", "3. 法力、以太场和消耗品", GOLD,
-                        "奥术启蒙笔记会增加魔力路线法力上限；奥术护身和水肺札记提供身体适应方向。",
+                        "奥术启蒙和两类札记只负责首次解锁；真正的重复调律在面板或专注垫结算。",
+                        "每次有效调律会给当前回路增加经验；回路最高 10 级，升级永久提高法力、调律率或身体适应。",
                         "晶化魔盐和聚魔水晶可以直接右键回法；它们会轻微扰动本地区块以太场。",
                         "如果奥术设施不运行，先看界面状态：可能是没材料、输出满、红石模式不允许，或本地以太场低于配方要求。"),
                 page("动作", "4. 研习、恢复和战斗动作", PURPLE,
-                        "研习动作：奥术启蒙、奥术护身、水肺调律会提高魔力路线和共享法力上限。",
+                        "研究札记不会直接回法或施法；它们只解锁以太调律、奥术护身或呼吸回路。",
                         "按可配置的奥术面板键（默认 M）可在任何位置执行调律；自由调律效率为 72%，仍会读取并扰动本区块以太场。",
+                        "面板按钮或默认 B 键会施展当前回路法术；以太脉冲、奥术护盾和呼吸回路效果不同，并独立消耗法力与冷却。",
                         "奥术冥想垫是可选增益：坐下后获得完整效率、额外聚魔、持续调律和更强的地球人恢复；只有坐着时 Shift 才用于离开。",
-                        "战斗动作：奥术护身札记会给短时间抗性和吸收，水肺调律偏呼吸与躯干恢复。"),
+                        "研究负责解锁，调律负责成长，主动法术负责即时效果；三者不会再由同一次右键混合执行。"),
                 page("边界", "5. 与玄幻和本体的关系", PURPLE,
                         earthLoaded
                                 ? "已连接《我的地球》：地质催化物、导能材料和晶体基底可以直接放入奥术设施。"

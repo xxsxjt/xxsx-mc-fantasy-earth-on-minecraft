@@ -2,6 +2,7 @@ package com.xxsx.earthonlinemagic;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 public final class ArcanaEvents {
@@ -11,6 +12,9 @@ public final class ArcanaEvents {
     }
 
     public static void onPlayerClone(PlayerEvent.Clone event) {
+        if (ModList.get().isLoaded("earth_online_xuanhuan")) {
+            return;
+        }
         CompoundTag source = event.getOriginal().getPersistentData();
         CompoundTag target = event.getEntity().getPersistentData();
         for (String key : source.keySet()) {

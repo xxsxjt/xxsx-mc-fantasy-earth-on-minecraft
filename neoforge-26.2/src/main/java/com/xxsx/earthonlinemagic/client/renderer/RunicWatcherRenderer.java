@@ -25,6 +25,7 @@ public final class RunicWatcherRenderer extends MobRenderer<RunicWatcherEntity, 
         super.extractRenderState(entity, state, partialTick);
         state.aggressive = entity.getTarget() != null;
         state.integrity = entity.getHealth() / entity.getMaxHealth();
+        state.attackProgress = entity.getAttackAnim(partialTick);
     }
 
     @Override

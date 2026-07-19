@@ -35,7 +35,9 @@ public class ManaConsumableItem extends MagicMaterialItem {
             if (restored > 0.0D) {
                 AetherChunkField.disturb(level, player.blockPosition(), restored * 0.25D);
             }
-            ArcanaPower.recordAction(player, level, "recovery_mana_consumable");
+            if (player instanceof ServerPlayer serverPlayer) {
+                ArcaneNetwork.broadcastVisual(serverPlayer, ArcaneVisualAction.MANA_RECOVERY);
+            }
             EarthHumanCompat.RecoveryReport report = player instanceof ServerPlayer serverPlayer
                     ? EarthHumanCompat.recoverWard(serverPlayer, Math.min(3.5D, restored * 0.08D), Math.min(0.20D, restored * 0.006D))
                     : new EarthHumanCompat.RecoveryReport(0.0D, 0.0D);

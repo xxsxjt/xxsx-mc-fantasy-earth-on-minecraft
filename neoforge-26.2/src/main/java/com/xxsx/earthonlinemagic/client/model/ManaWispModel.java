@@ -66,5 +66,15 @@ public final class ManaWispModel extends EntityModel<FamiliarRenderState> {
         float pulse = 1.0F + Mth.sin(age * 0.24F) * 0.06F;
         core.xScale = pulse;
         core.zScale = pulse;
+        float attack = Mth.sin(state.attackProgress * Mth.PI);
+        ring.xScale = 1.0F + attack * 0.45F;
+        ring.zScale = 1.0F + attack * 0.45F;
+        flame.yScale += attack * 0.35F;
+        if (state.sitting) {
+            core.y += 1.4F;
+            ring.y += 1.4F;
+            leftFin.zRot = -0.08F;
+            rightFin.zRot = 0.08F;
+        }
     }
 }

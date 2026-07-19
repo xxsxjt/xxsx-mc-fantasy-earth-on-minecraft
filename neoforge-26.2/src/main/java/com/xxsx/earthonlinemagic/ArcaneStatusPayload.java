@@ -12,6 +12,10 @@ public record ArcaneStatusPayload(
         int remainingTicks,
         int focusId,
         int unlockedMask,
+        int focusLevel,
+        int focusXp,
+        int focusXpNeeded,
+        int skillRemainingTicks,
         boolean earthHumanLinked,
         double fatigue,
         double bodyIntegrity,
@@ -25,6 +29,7 @@ public record ArcaneStatusPayload(
         public ArcaneStatusPayload decode(RegistryFriendlyByteBuf buf) {
             return new ArcaneStatusPayload(
                     buf.readDouble(), buf.readDouble(), buf.readVarInt(), buf.readDouble(),
+                    buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(),
                     buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readBoolean(),
                     buf.readDouble(), buf.readDouble(), buf.readUtf(), buf.readBoolean(), buf.readBoolean());
         }
@@ -38,6 +43,10 @@ public record ArcaneStatusPayload(
             buf.writeVarInt(payload.remainingTicks());
             buf.writeVarInt(payload.focusId());
             buf.writeVarInt(payload.unlockedMask());
+            buf.writeVarInt(payload.focusLevel());
+            buf.writeVarInt(payload.focusXp());
+            buf.writeVarInt(payload.focusXpNeeded());
+            buf.writeVarInt(payload.skillRemainingTicks());
             buf.writeBoolean(payload.earthHumanLinked());
             buf.writeDouble(payload.fatigue());
             buf.writeDouble(payload.bodyIntegrity());
@@ -49,7 +58,7 @@ public record ArcaneStatusPayload(
 
     public static ArcaneStatusPayload empty() {
         return new ArcaneStatusPayload(0.0D, 20.0D, 0, 0.0D, 0,
-                ArcaneFocus.ATTUNEMENT.id(), 1, false, 0.0D, 1.0D,
+                ArcaneFocus.ATTUNEMENT.id(), 0, 0, 0, 0, 0, false, 0.0D, 1.0D,
                 "aether.earth_online_magic.source.natural", false, false);
     }
 

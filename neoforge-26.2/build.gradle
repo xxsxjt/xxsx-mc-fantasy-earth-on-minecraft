@@ -3,7 +3,7 @@ plugins {
     id 'net.neoforged.moddev' version '2.0.140'
 }
 
-version = '0.7.0-alpha.1'
+version = '0.7.0-alpha.4'
 group = 'com.xxsx.earthonlinemagic'
 base.archivesName = 'fantasy-earth-on-minecraft-neoforge-26.2'
 
@@ -57,4 +57,18 @@ jar {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+}
+
+tasks.register('verifyArcanaBalance', JavaExec) {
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.xxsx.earthonlinemagic.ArcanaBalanceRegression'
+}
+
+tasks.named('test', Test) {
+    failOnNoDiscoveredTests = false
+}
+
+tasks.named('check') {
+    dependsOn verifyArcanaBalance
 }

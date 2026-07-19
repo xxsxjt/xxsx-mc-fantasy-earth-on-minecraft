@@ -73,6 +73,12 @@ public class ArcaneFocusMatBlock extends Block {
         if (!(level instanceof ServerLevel serverLevel) || !(player instanceof ServerPlayer serverPlayer)) {
             return InteractionResult.SUCCESS_SERVER;
         }
+        if (ArcanaPower.getMagicResearchLevel(serverPlayer) <= 0) {
+            serverPlayer.sendSystemMessage(Component.translatable(
+                    "message.earth_online_magic.practice.requires_initiation")
+                    .withStyle(ChatFormatting.RED));
+            return InteractionResult.SUCCESS_SERVER;
+        }
         ArcaneSeatEntity seat = findSeat(serverLevel, pos);
         if (seat != null && seat.isVehicle()) {
             if (seat.getFirstPassenger() == serverPlayer) {

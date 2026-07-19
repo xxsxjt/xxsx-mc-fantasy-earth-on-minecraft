@@ -5,11 +5,10 @@ import com.xxsx.earthonlinemagic.client.model.CrystalSpiderModel;
 import com.xxsx.earthonlinemagic.entity.CrystalArmoredSpiderEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.Identifier;
 
 public final class CrystalSpiderRenderer extends MobRenderer<CrystalArmoredSpiderEntity,
-        LivingEntityRenderState, CrystalSpiderModel> {
+        CrystalSpiderRenderState, CrystalSpiderModel> {
     private static final Identifier TEXTURE = EarthOnlineMagic.id("textures/entity/crystal_armored_spider.png");
 
     public CrystalSpiderRenderer(EntityRendererProvider.Context context) {
@@ -17,12 +16,19 @@ public final class CrystalSpiderRenderer extends MobRenderer<CrystalArmoredSpide
     }
 
     @Override
-    public LivingEntityRenderState createRenderState() {
-        return new LivingEntityRenderState();
+    public CrystalSpiderRenderState createRenderState() {
+        return new CrystalSpiderRenderState();
     }
 
     @Override
-    public Identifier getTextureLocation(LivingEntityRenderState state) {
+    public void extractRenderState(CrystalArmoredSpiderEntity entity, CrystalSpiderRenderState state,
+                                   float partialTick) {
+        super.extractRenderState(entity, state, partialTick);
+        state.attackProgress = entity.getAttackAnim(partialTick);
+    }
+
+    @Override
+    public Identifier getTextureLocation(CrystalSpiderRenderState state) {
         return TEXTURE;
     }
 }

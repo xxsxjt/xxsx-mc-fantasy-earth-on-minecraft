@@ -15,8 +15,9 @@ public final class ArcaneNetwork {
     }
 
     public static void registerPayloads(RegisterPayloadHandlersEvent event) {
-        event.registrar("0.4.3")
+        event.registrar("0.7.0-alpha.4")
                 .playToClient(ArcaneStatusPayload.TYPE, ArcaneStatusPayload.CODEC)
+                .playToClient(ArcaneVisualPayload.TYPE, ArcaneVisualPayload.CODEC)
                 .playToServer(ArcaneActionPayload.TYPE, ArcaneActionPayload.CODEC, ArcaneNetwork::handleAction);
     }
 
@@ -26,20 +27,30 @@ public final class ArcaneNetwork {
         }
         AetherChunkField.Reading reading = AetherChunkField.read(level, pos);
         EarthHumanCompat.HumanSnapshot human = EarthHumanCompat.snapshot(player);
+        ArcaneFocus focus = ArcanaPower.getArcaneFocus(player);
         PacketDistributor.sendToPlayer(player, new ArcaneStatusPayload(
                 ArcanaPower.getCurrentMana(player),
                 ArcanaPower.getMaxMana(player),
                 reading.value(),
                 reading.disturbance(),
                 (int) Math.min(Integer.MAX_VALUE, ArcanaPower.getMagicFocusCooldownTicks(player, level)),
-                ArcanaPower.getArcaneFocus(player).id(),
+                focus.id(),
                 ArcanaPower.getArcaneFocusMask(player),
+                ArcanaPower.getFocusLevel(player, focus),
+                ArcanaPower.getFocusXp(player, focus),
+                ArcanaPower.getFocusXpNeeded(player, focus),
+                (int) Math.min(Integer.MAX_VALUE, ArcanaPower.getSkillCooldownTicks(player, level)),
                 human.linked(),
                 human.fatigue(),
                 human.bodyIntegrity(),
                 reading.mainSourceKey(),
                 player.getVehicle() instanceof ArcaneSeatEntity,
                 openScreen));
+    }
+
+    public static void broadcastVisual(ServerPlayer player, ArcaneVisualAction action) {
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(player,
+                new ArcaneVisualPayload(player.getId(), action.id()));
     }
 
     private static void handleAction(ArcaneActionPayload payload, IPayloadContext context) {
@@ -74,6 +85,11 @@ public final class ArcaneNetwork {
                 ArcanePractice.perform(level, pos, player,
                         seat == null ? ArcanePractice.Support.FREE : ArcanePractice.Support.FOCUS_MAT,
                         false);
+                sync(player, pos, false);
+                return;
+            }
+            if (action == ArcaneActionPayload.ACTIVATE_SKILL) {
+                ArcaneSkill.activate(level, player);
                 sync(player, pos, false);
                 return;
             }

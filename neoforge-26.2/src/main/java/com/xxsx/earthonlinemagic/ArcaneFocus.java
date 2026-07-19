@@ -19,6 +19,10 @@ public enum ArcaneFocus {
         return id;
     }
 
+    public String path() {
+        return path;
+    }
+
     public String titleKey() {
         return "screen.earth_online_magic.attunement.focus." + path;
     }

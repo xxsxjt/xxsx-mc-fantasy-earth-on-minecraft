@@ -186,6 +186,10 @@ public class EarthOnlineMagic {
         modBus.addListener(this::registerEntityAttributes);
         modBus.addListener(this::registerSpawnPlacements);
         NeoForge.EVENT_BUS.addListener(ArcanaEvents::onPlayerClone);
+        NeoForge.EVENT_BUS.addListener(ArcanaPassiveEffects::onPlayerTick);
+        NeoForge.EVENT_BUS.addListener(ArcanaPassiveEffects::onIncomingDamage);
+        NeoForge.EVENT_BUS.addListener(ArcanaPassiveEffects::onFall);
+        NeoForge.EVENT_BUS.addListener(ArcanaPassiveEffects::onBreathe);
         NeoForge.EVENT_BUS.addListener(MagicSettlementCatalog::register);
         TAB_ITEMS.add(FIELD_ARCANE_NOTEBOOK);
         TAB_ITEMS.add(ARCANE_INITIATION_NOTES);

@@ -1,6 +1,7 @@
 package com.xxsx.earthonlinemagic.client;
 
 import com.xxsx.earthonlinemagic.ArcanaPower;
+import com.xxsx.earthonlinemagic.ArcaneStatusPayload;
 import com.xxsx.earthonlinemagic.ArcaneSeatEntity;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -36,12 +37,12 @@ public final class ArcaneFocusHud {
         int x = (graphics.guiWidth() - panelWidth) / 2;
         int y = Math.max(8, graphics.guiHeight() - 94);
 
-        float partialTick = deltaTracker.getGameTimeDeltaPartialTick(true);
-        float cycleTick = (seat.tickCount + partialTick) % ArcanaPower.MAGIC_FOCUS_COOLDOWN_TICKS;
-        float progress = cycleTick / ArcanaPower.MAGIC_FOCUS_COOLDOWN_TICKS;
+        ArcaneStatusPayload status = EarthOnlineMagicClient.arcaneStatus();
+        float cycleTick = Math.max(0.0F,
+                ArcanaPower.MAGIC_FOCUS_COOLDOWN_TICKS - status.remainingTicks());
+        float progress = Math.min(1.0F, cycleTick / ArcanaPower.MAGIC_FOCUS_COOLDOWN_TICKS);
         int stage = Math.min(STAGES.length - 1, (int) (progress * STAGES.length));
-        int remainingSeconds = Math.max(1,
-                (int) Math.ceil((ArcanaPower.MAGIC_FOCUS_COOLDOWN_TICKS - cycleTick) / 20.0F));
+        int remainingSeconds = Math.max(1, (status.remainingTicks() + 19) / 20);
 
         int border = 0xD88E7CFF;
         int panel = 0xD0141320;
@@ -72,9 +73,9 @@ public final class ArcaneFocusHud {
         int textX = x + 54;
         int textWidth = panelWidth - 62;
         Component focus = Component.translatable(
-                com.xxsx.earthonlinemagic.ArcaneFocus.byId(
-                        EarthOnlineMagicClient.arcaneStatus().focusId()).titleKey());
-        Component title = fit(font, Component.translatable("hud.earth_online_magic.focus.title", focus), textWidth);
+                com.xxsx.earthonlinemagic.ArcaneFocus.byId(status.focusId()).titleKey());
+        Component title = fit(font, Component.translatable(
+                "hud.earth_online_magic.focus.title", focus, status.focusLevel()), textWidth);
         graphics.text(font, title, textX, y + 7, 0xFFF8F4FF, false);
 
         Component stageText = Component.translatable(stageKey(stage));
