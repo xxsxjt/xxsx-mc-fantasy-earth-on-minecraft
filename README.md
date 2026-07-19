@@ -10,7 +10,7 @@ Initial target:
 - Loader: NeoForge 26.2.0.7-beta
 - Java: 25
 - Current mod id: `earth_online_magic`
-- Current version: `0.7.0-alpha.5`
+- Current version: `0.7.0-alpha.6`
 - Current status: in-development playable beta
 
 `0.4.3` begins the large-mod phase with a configurable arcane-panel key (`M` by default).
@@ -48,6 +48,10 @@ study initiation notes, complete valid attunement, personally collect a facility
 an active spell, actually restore mana with a consumable, and bind a familiar. The handbook
 shows live completion and the next concrete action, while old saves only recover milestones
 that existing levels and experience can prove.
+
+`0.7.0-alpha.6` adds a dedicated mod icon built around a brass arcane astrolabe, a violet
+aether crystal and a block-shaped Earth. Its silhouette remains distinct from the xuanhuan
+golden cultivation ring when both mods appear in the same NeoForge mod list.
 
 Design documents:
 
@@ -89,7 +93,7 @@ Texture note: facilities use per-face exterior textures, distinct active states 
 
 Mana note: this mod shares the versioned `earth_online_arcana.*` player-data contract with `earth_online_xuanhuan`. Magic-route and qi-route bonuses add together when both mods are present, but each mod writes only its own contribution and remains fully playable alone. Aether-field recovery is intentionally separate from xuanhuan qi: magic reads crystal, ritual, rune and alchemy structures, while xuanhuan reads veins, springs, spirit soil and arrays.
 
-Build artifact: `fantasy-earth-on-minecraft-neoforge-26.2-0.7.0-alpha.5.jar`.
+Build artifact: `fantasy-earth-on-minecraft-neoforge-26.2-0.7.0-alpha.6.jar`.
 
 Build:
 

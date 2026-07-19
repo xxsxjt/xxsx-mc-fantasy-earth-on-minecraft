@@ -4,8 +4,9 @@ license="All Rights Reserved"
 
 [[mods]]
 modId="earth_online_magic"
-version="0.7.0-alpha.5"
+version="0.7.0-alpha.6"
 displayName="Fantasy Earth on Minecraft / 魔幻地球 on Minecraft"
+logoFile="logo.png"
 description='''
 In-development beta for Minecraft 26.2 + NeoForge 26.2.0.7-beta.
 Fantasy Earth on Minecraft is an independently playable fantasy world mod:
