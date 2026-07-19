@@ -15,7 +15,7 @@ public final class ArcaneNetwork {
     }
 
     public static void registerPayloads(RegisterPayloadHandlersEvent event) {
-        event.registrar("0.7.0-alpha.4")
+        event.registrar("0.7.0-alpha.5")
                 .playToClient(ArcaneStatusPayload.TYPE, ArcaneStatusPayload.CODEC)
                 .playToClient(ArcaneVisualPayload.TYPE, ArcaneVisualPayload.CODEC)
                 .playToServer(ArcaneActionPayload.TYPE, ArcaneActionPayload.CODEC, ArcaneNetwork::handleAction);
@@ -36,6 +36,7 @@ public final class ArcaneNetwork {
                 (int) Math.min(Integer.MAX_VALUE, ArcanaPower.getMagicFocusCooldownTicks(player, level)),
                 focus.id(),
                 ArcanaPower.getArcaneFocusMask(player),
+                MagicJourney.reconcile(player),
                 ArcanaPower.getFocusLevel(player, focus),
                 ArcanaPower.getFocusXp(player, focus),
                 ArcanaPower.getFocusXpNeeded(player, focus),

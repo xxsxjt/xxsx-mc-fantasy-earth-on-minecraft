@@ -44,6 +44,9 @@ public class ManaConsumableItem extends MagicMaterialItem {
             if (!player.getAbilities().instabuild) {
                 stack.shrink(1);
             }
+            if (player instanceof ServerPlayer serverPlayer) {
+                MagicJourney.complete(serverPlayer, MagicJourney.Milestone.MANA_RECOVERY);
+            }
             player.sendSystemMessage(Component.translatable("message.earth_online_magic.mana_consumable.used",
                     displayName,
                     ArcanaPower.format(restored),

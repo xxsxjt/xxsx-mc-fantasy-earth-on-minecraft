@@ -2,6 +2,7 @@ package com.xxsx.earthonlinemagic;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -82,6 +83,8 @@ public class MagicMachineMenu extends AbstractContainerMenu {
         }
         ItemStack stack = slot.getItem();
         ItemStack moved = stack.copy();
+        boolean outputSlot = index >= MagicMachineBlockEntity.SLOT_OUTPUT_START
+                && index < MagicMachineBlockEntity.SLOT_COUNT;
         if (index < MagicMachineBlockEntity.SLOT_COUNT) {
             if (!moveItemStackTo(stack, PLAYER_INV_START, HOTBAR_END, true)) {
                 return ItemStack.EMPTY;
@@ -112,6 +115,9 @@ public class MagicMachineMenu extends AbstractContainerMenu {
             slot.setByPlayer(ItemStack.EMPTY);
         } else {
             slot.setChanged();
+        }
+        if (outputSlot && player instanceof ServerPlayer serverPlayer) {
+            MagicJourney.complete(serverPlayer, MagicJourney.Milestone.FACILITY_OUTPUT);
         }
         return moved;
     }
@@ -186,6 +192,14 @@ public class MagicMachineMenu extends AbstractContainerMenu {
         @Override
         public boolean mayPlace(ItemStack stack) {
             return false;
+        }
+
+        @Override
+        public void onTake(Player player, ItemStack carried) {
+            super.onTake(player, carried);
+            if (!carried.isEmpty() && player instanceof ServerPlayer serverPlayer) {
+                MagicJourney.complete(serverPlayer, MagicJourney.Milestone.FACILITY_OUTPUT);
+            }
         }
     }
 

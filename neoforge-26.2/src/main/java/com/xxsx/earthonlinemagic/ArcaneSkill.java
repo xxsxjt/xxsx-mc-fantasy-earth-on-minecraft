@@ -75,6 +75,7 @@ public final class ArcaneSkill {
         player.sendSystemMessage(Component.translatable(
                 "message.earth_online_magic.skill.activated." + focus.path(),
                 ArcanaPower.format(cost)).withStyle(ChatFormatting.LIGHT_PURPLE));
+        MagicJourney.complete(player, MagicJourney.Milestone.ACTIVE_SPELL);
         return true;
     }
 }

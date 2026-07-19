@@ -2,6 +2,7 @@ package com.xxsx.earthonlinemagic.client;
 
 import com.xxsx.earthonlinemagic.ArcaneFocus;
 import com.xxsx.earthonlinemagic.ArcaneStatusPayload;
+import com.xxsx.earthonlinemagic.MagicJourney;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
@@ -214,13 +215,25 @@ public class MagicHandbookScreen extends Screen {
 
     private List<Entry> liveStatusEntries() {
         ArcaneStatusPayload status = EarthOnlineMagicClient.arcaneStatus();
+        List<Entry> entries = new ArrayList<>();
+        int journeyMask = status.journeyMask();
+        entries.add(new Entry(Component.translatable(
+                "screen.earth_online_magic.handbook.journey.progress",
+                MagicJourney.count(journeyMask), MagicJourney.total()).getString(), 10, BLUE));
+        MagicJourney.Milestone nextMilestone = MagicJourney.nextMilestone(journeyMask);
+        if (nextMilestone == null) {
+            entries.add(new Entry(Component.translatable(
+                    "screen.earth_online_magic.handbook.journey.complete").getString(), 10, GOLD));
+        } else {
+            entries.add(new Entry(Component.translatable(
+                    "screen.earth_online_magic.handbook.journey.next",
+                    Component.translatable(nextMilestone.nextKey())).getString(), 10, GOLD));
+        }
+        entries.add(new Entry("", 0, INK));
         if (!status.isUnlocked(ArcaneFocus.ATTUNEMENT)) {
-            return List.of(
-                    new Entry(Component.translatable(
-                            "screen.earth_online_magic.handbook.status.locked").getString(), 10, PURPLE),
-                    new Entry(Component.translatable(
-                            "screen.earth_online_magic.handbook.status.next.learn").getString(), 10, GOLD),
-                    new Entry("", 0, INK));
+            entries.add(new Entry(Component.translatable(
+                    "screen.earth_online_magic.handbook.status.locked").getString(), 10, PURPLE));
+            return List.copyOf(entries);
         }
 
         ArcaneFocus focus = ArcaneFocus.byId(status.focusId());
@@ -231,13 +244,13 @@ public class MagicHandbookScreen extends Screen {
         String nextKey = unlocked < ArcaneFocus.values().length
                 ? "screen.earth_online_magic.handbook.status.next.unlock"
                 : "screen.earth_online_magic.handbook.status.next.train";
-        return List.of(
-                new Entry(Component.translatable(
-                        "screen.earth_online_magic.handbook.status.current",
-                        Component.translatable(focus.titleKey()), status.focusLevel(), xp, unlocked).getString(),
-                        10, BLUE),
-                new Entry(Component.translatable(nextKey).getString(), 10, GOLD),
-                new Entry("", 0, INK));
+        entries.add(new Entry(Component.translatable(
+                "screen.earth_online_magic.handbook.status.current",
+                Component.translatable(focus.titleKey()), status.focusLevel(), xp, unlocked).getString(),
+                10, BLUE));
+        entries.add(new Entry(Component.translatable(nextKey).getString(), 10, GOLD));
+        entries.add(new Entry("", 0, INK));
+        return List.copyOf(entries);
     }
 
     private int bookWidth() {

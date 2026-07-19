@@ -10,6 +10,7 @@ public final class ArcanaBalanceRegression {
         verifyMonotonicAndCapped();
         verifyInvalidValuesAreBounded();
         verifyExperienceCurve();
+        verifyJourneyMask();
     }
 
     private static void verifyMonotonicAndCapped() {
@@ -53,6 +54,25 @@ public final class ArcanaBalanceRegression {
         }
         require(ArcanaBalance.xpNeededForLevel(0, 10) == 0, "locked route must not require experience");
         require(ArcanaBalance.xpNeededForLevel(10, 10) == 0, "capped route must not require experience");
+    }
+
+    private static void verifyJourneyMask() {
+        int total = 6;
+        int mask = 0;
+        for (int milestoneId = 0; milestoneId < total; milestoneId++) {
+            require(JourneyProgress.nextId(mask, total) == milestoneId, "journey order changed");
+            int next = JourneyProgress.apply(mask, milestoneId, total);
+            require(JourneyProgress.count(next, total) == JourneyProgress.count(mask, total) + 1,
+                    "journey count did not advance");
+            require(JourneyProgress.apply(next, milestoneId, total) == next,
+                    "journey milestone is not idempotent");
+            mask = next;
+        }
+        require(JourneyProgress.isComplete(mask, total), "journey full mask is incomplete");
+        require(JourneyProgress.nextId(mask, total) == -1, "complete journey still has a next step");
+        require(JourneyProgress.count(mask, total) == total, "journey total mismatch");
+        require(JourneyProgress.sanitize(mask | (1 << 20), total) == mask,
+                "journey mask kept unknown bits");
     }
 
     private static void close(double expected, double actual) {

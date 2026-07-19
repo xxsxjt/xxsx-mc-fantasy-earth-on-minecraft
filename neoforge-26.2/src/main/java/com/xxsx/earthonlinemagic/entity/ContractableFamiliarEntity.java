@@ -2,6 +2,7 @@ package com.xxsx.earthonlinemagic.entity;
 
 import com.xxsx.earthonlinemagic.ArcanaPower;
 import com.xxsx.earthonlinemagic.EarthOnlineMagic;
+import com.xxsx.earthonlinemagic.MagicJourney;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -150,6 +151,9 @@ public abstract class ContractableFamiliarEntity extends TamableAnimal {
                         level().broadcastEntityEvent(this, (byte) 7);
                         player.sendSystemMessage(Component.translatable(
                                 "message.earth_online_magic.familiar.contracted", getDisplayName()));
+                        if (player instanceof ServerPlayer serverPlayer) {
+                            MagicJourney.complete(serverPlayer, MagicJourney.Milestone.FAMILIAR_CONTRACT);
+                        }
                     }
                 }
                 return level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER;

@@ -28,6 +28,9 @@ public class ArcaneInitiationNotesItem extends Item {
                         ? "message.earth_online_magic.arcane_notes.learned"
                         : "message.earth_online_magic.arcane_notes.already_learned")
                 .withStyle(learned ? ChatFormatting.LIGHT_PURPLE : ChatFormatting.YELLOW));
+        if (learned && player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+            MagicJourney.complete(serverPlayer, MagicJourney.Milestone.INITIATION);
+        }
         ArcaneAdaptationNotesItem.sendAdaptationStatus(player);
         if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
             ArcaneNetwork.sync(serverPlayer, player.blockPosition(), true);

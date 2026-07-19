@@ -4,7 +4,7 @@ license="All Rights Reserved"
 
 [[mods]]
 modId="earth_online_magic"
-version="0.7.0-alpha.4"
+version="0.7.0-alpha.5"
 displayName="Fantasy Earth on Minecraft / 魔幻地球 on Minecraft"
 description='''
 In-development beta for Minecraft 26.2 + NeoForge 26.2.0.7-beta.
@@ -21,6 +21,8 @@ circuits; repeated attunement advances independent level-1-to-10 experience
 tracks, and each circuit has a mana-costed active spell with its own cooldown.
 Level rewards now produce real metabolic, combat-resilience and breathing consequences;
 the handbook reports live progression and the next valid action.
+The handbook also tracks a persistent six-step standalone journey from initiation through
+attunement, facility output, active spell, mana recovery and familiar binding.
 Successful attunement, recovery and spell casts broadcast short-lived player
 action states instead of writing unused telemetry.
 Familiar and hostile render states now carry real attack progress and sitting

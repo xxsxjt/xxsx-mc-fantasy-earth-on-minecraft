@@ -136,6 +136,7 @@ public final class ArcanePractice {
                     Component.translatable(focus.titleKey()), progress.level())
                     .withStyle(ChatFormatting.GOLD));
         }
+        MagicJourney.complete(player, MagicJourney.Milestone.ATTUNEMENT);
         emitPractice(level, pos, focus, support);
         return true;
     }

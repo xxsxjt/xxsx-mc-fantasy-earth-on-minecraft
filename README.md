@@ -10,7 +10,7 @@ Initial target:
 - Loader: NeoForge 26.2.0.7-beta
 - Java: 25
 - Current mod id: `earth_online_magic`
-- Current version: `0.7.0-alpha.4`
+- Current version: `0.7.0-alpha.5`
 - Current status: in-development playable beta
 
 `0.4.3` begins the large-mod phase with a configurable arcane-panel key (`M` by default).
@@ -42,6 +42,12 @@ fall impact, and breathing research lowers underwater air consumption by a persi
 multiplier. Xuanhuan Earth owns shared-body-effect consumption when both mods are installed,
 preventing duplicate application. The handbook now shows live unlock/XP/next-step status,
 while attunement, recovery and spell casts drive short-lived synchronized player poses.
+
+`0.7.0-alpha.5` connects the existing systems into a persistent six-step standalone journey:
+study initiation notes, complete valid attunement, personally collect a facility output, cast
+an active spell, actually restore mana with a consumable, and bind a familiar. The handbook
+shows live completion and the next concrete action, while old saves only recover milestones
+that existing levels and experience can prove.
 
 Design documents:
 
@@ -83,7 +89,7 @@ Texture note: facilities use per-face exterior textures, distinct active states 
 
 Mana note: this mod shares the versioned `earth_online_arcana.*` player-data contract with `earth_online_xuanhuan`. Magic-route and qi-route bonuses add together when both mods are present, but each mod writes only its own contribution and remains fully playable alone. Aether-field recovery is intentionally separate from xuanhuan qi: magic reads crystal, ritual, rune and alchemy structures, while xuanhuan reads veins, springs, spirit soil and arrays.
 
-Build artifact: `fantasy-earth-on-minecraft-neoforge-26.2-0.7.0-alpha.4.jar`.
+Build artifact: `fantasy-earth-on-minecraft-neoforge-26.2-0.7.0-alpha.5.jar`.
 
 Build:
 
