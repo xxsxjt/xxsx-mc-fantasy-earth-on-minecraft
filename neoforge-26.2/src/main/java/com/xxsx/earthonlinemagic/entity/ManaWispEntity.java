@@ -2,6 +2,7 @@ package com.xxsx.earthonlinemagic.entity;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -35,6 +36,7 @@ public final class ManaWispEntity extends ContractableFamiliarEntity {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return ContractableFamiliarEntity.createAttributes(12.0D, 0.31D, 2.0D, 0.0D, 0.0D);
+        return ContractableFamiliarEntity.createAttributes(12.0D, 0.31D, 2.0D, 0.0D, 0.0D)
+                .add(Attributes.FLYING_SPEED, 0.31D);
     }
 }

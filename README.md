@@ -10,7 +10,7 @@ Initial target:
 - Loader: NeoForge 26.2.0.7-beta
 - Java: 25
 - Current mod id: `earth_online_magic`
-- Current version: `0.7.0-alpha.6`
+- Current version: `0.7.0-alpha.7`
 - Current status: in-development playable beta
 
 `0.4.3` begins the large-mod phase with a configurable arcane-panel key (`M` by default).
@@ -53,6 +53,9 @@ that existing levels and experience can prove.
 aether crystal and a block-shaped Earth. Its silhouette remains distinct from the xuanhuan
 golden cultivation ring when both mods appear in the same NeoForge mod list.
 
+`0.7.0-alpha.7` registers the required `minecraft:flying_speed` attribute for mana wisps.
+Their `FlyingMoveControl` can now tick safely instead of crashing when a mana wisp is loaded.
+
 Design documents:
 
 - [Initial Plan](docs/initial-plan.md)
@@ -93,7 +96,7 @@ Texture note: facilities use per-face exterior textures, distinct active states 
 
 Mana note: this mod shares the versioned `earth_online_arcana.*` player-data contract with `earth_online_xuanhuan`. Magic-route and qi-route bonuses add together when both mods are present, but each mod writes only its own contribution and remains fully playable alone. Aether-field recovery is intentionally separate from xuanhuan qi: magic reads crystal, ritual, rune and alchemy structures, while xuanhuan reads veins, springs, spirit soil and arrays.
 
-Build artifact: `fantasy-earth-on-minecraft-neoforge-26.2-0.7.0-alpha.6.jar`.
+Build artifact: `fantasy-earth-on-minecraft-neoforge-26.2-0.7.0-alpha.7.jar`.
 
 Build:
 
